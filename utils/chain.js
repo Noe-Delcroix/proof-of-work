@@ -7,13 +7,35 @@ var ChainUtilities = function ChainUtilities(){
   this.isValidChain = isValidChain;
 
   function isValidChain(chain){
-    if(chain.length>0){
+    if (chain.length == 1) return true;
+    
+    if(chain.length>1){
       for (var i = 1; i < chain.length; i++) {
-        var lastBlockHash = calculateHash(chain[i-1]);
-        if(lastBlockHash !== chain[i].previousHash){
+        var current = chain[i];
+        var previous = chain[i-1];
+        
+        console.log(i);
+        console.log("==================== Chain courrante [i] ====================");
+        console.log(current);
+        console.log("==================== Chain précédente [i-1] ====================");
+        console.log(previous);
+
+        
+        console.log("==================== Vérif hash prev-current ====================");
+        var lastBlockHash = validatorUtilities.calculateHash(previous);
+        console.log(lastBlockHash);
+        console.log(current.previousHash);
+
+        if(lastBlockHash !== current.previousHash){
           return false;
         }
-        if(validatorUtilities.generateProof(chain[i]) !== chain[i].proof){
+
+        var proof = validatorUtilities.generateProof(current.transaction[0]);
+        console.log("==================== Vérif proof current ====================");
+        console.log(proof);
+        console.log(current.proof);
+
+        if(proof !== current.proof){
           return false;
         }
       }

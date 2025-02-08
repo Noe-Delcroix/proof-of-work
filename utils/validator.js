@@ -5,17 +5,26 @@ var ValidatorHandler = function ValidatorHandler(){
   this.calculateHash = calculateHash;
   this.generateProof = generateProof;
 
-  function calculateHash(transaction){
+  function calculateHash(chain){
+    console.log("calculateHash");
+    console.log(transaction);
+
+    var transaction = chain.transaction[0];
+    var timestamp = chain.timestamp;
+    
     if(!transaction || transaction.sender === undefined || transaction.receiver === undefined){
       return false;
     }
-    return generateHashFromString(transaction.sender)+"-"+generateHashFromString(transaction.receiver)+"-0"+(new Date().getTime().toString(16));
+
+    return generateHashFromString(""+transaction.sender)+"-"+generateHashFromString(transaction.receiver)+"-"+generateHashFromString(""+timestamp);
   }
 
   function generateProof(transaction){
-    if(!transaction || transaction.sender === undefined || transaction.receiver === undefined || transaction.amount === undefined){
-      return false;
+    if (!transaction || transaction.sender === undefined || !transaction.receiver || transaction.amount === undefined) {
+        return false;
     }
+
+    console.log("grocaca");
     if(transaction.sender === 0){
       return generateIntegerFromAddress(transaction.receiver) * parseFloat(transaction.amount);
     }

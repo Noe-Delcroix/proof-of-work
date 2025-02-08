@@ -1,6 +1,7 @@
 var addressUtilities = require('../utils/address');
 var arrayUtilities = require('../utils/array');
 var validator = require('../utils/validator');
+var chainUtilities = require('../utils/chain');
 
 var blockchain = function blockchain(){
 
@@ -33,7 +34,7 @@ var blockchain = function blockchain(){
     return self.chain;
   }
 
-  function mine(miner){
+  function mine(miner, amount){
     /*
     *  implements the mining function. simple as is, it just
     *  creates a new transaction with "sender" 0 to show that
@@ -41,9 +42,9 @@ var blockchain = function blockchain(){
     */
 
     var lastBlock = self.chain[self.chain.length-1];
-    var transaction = newTransaction(0,miner,1);
+    var transaction = newTransaction(0,miner, (amount ? amount : 1) );
     var proof = validator.generateProof(transaction);
-    var previousHash = validator.calculateHash(lastBlock.transaction[0]);
+    var previousHash = validator.calculateHash(lastBlock);
     return newBlock(proof, previousHash);
   }
 
@@ -77,7 +78,11 @@ var blockchain = function blockchain(){
   }
 
   function checkChain(){
-    
+    /*
+    *  Check if the current chain is valid
+    */
+    var isItValid = chainUtilities.isValidChain(self.chain);
+    return isItValid ? self.chain : [];
   }
 
 

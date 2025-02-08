@@ -24,10 +24,11 @@ router.get('/chain', function(req, res, next) {
 });
 router.post('/mine', function(req, res, next) {
   var miningNode = req.headers.host;
+  var amount = req.headers.amount;
   if(!network.nodeExists(miningNode)){
     network.registerNode(miningNode);
   }
-  res.send(blockchain.mine(req.headers.host));
+  res.send(blockchain.mine(req.headers.host, amount));
 
 });
 
@@ -37,10 +38,6 @@ router.get('/nodes', function(req, res, next) {
 
 router.post('/nodes/register', function(req, res, next) {
   res.send(network.registerNode(req.headers.host));
-});
-
-router.post('/transactions', function(req, res, next){
-
 });
 
 router.post('/checkChain', function(req, res, next){
